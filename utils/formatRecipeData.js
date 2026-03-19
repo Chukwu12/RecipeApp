@@ -9,7 +9,11 @@ function formatRecipeData(recipe) {
       instructions: recipe.instructions || '',
       servings: recipe.servings,
       readyInMinutes: recipe.readyInMinutes,
-      ingredients: recipe.extendedIngredients?.map(ing => ing.original) || [],
+      ingredients: recipe.extendedIngredients?.map(ing => ({
+        name: ing.name,
+        amount: ing.amount,
+        unit: ing.unit
+      })) || [],
       numberOfIngredients: recipe.extendedIngredients ? recipe.extendedIngredients.length : 0
     };
   }

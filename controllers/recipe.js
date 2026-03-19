@@ -10,6 +10,35 @@ const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/informa
 // const API_KEY = process.env.API_KEY;
 
 
+// Helper: Ensure a recipe has a populated ingredients array
+const ensureIngredients = async (recipe) => {
+  if (!Array.isArray(recipe.ingredients) || recipe.ingredients.length === 0) {
+    const id = recipe.spoonacularId || recipe.id;
+    if (!id) return recipe;
+
+    try {
+      const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', id), {
+        params: { apiKey: RECIPES_API_KEY }
+      });
+
+      const apiIngredients = (response.data.extendedIngredients || []).map(ing => ({
+        name: ing.name,
+        amount: ing.amount,
+        unit: ing.unit || ""
+      }));
+
+      if (apiIngredients.length > 0) {
+        await Recipe.updateOne({ _id: recipe._id }, { $set: { ingredients: apiIngredients } });
+        recipe.ingredients = apiIngredients;
+      }
+    } catch (error) {
+      console.warn(`Could not enrich recipe ${id} with ingredients:`, error.message);
+    }
+  }
+
+  return recipe;
+};
+
 const getRandomRecipes = async () => {
     try {
         const requiredRecipes = 5;
@@ -40,6 +69,9 @@ const getRandomRecipes = async () => {
             await Recipe.insertMany(formattedApiRecipes, { ordered: false });
             recipes = recipes.concat(formattedApiRecipes);
         }
+
+        // Ensure each recipe has ingredients for display
+        recipes = await Promise.all(recipes.map(ensureIngredients));
 
         // Step 3: Return the final combined list of recipes
         return recipes;
