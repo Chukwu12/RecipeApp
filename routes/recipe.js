@@ -9,10 +9,10 @@ const profileController = require('../controllers/profile');
 require('dotenv').config();
 
 
-// Endpoint to send the API Key to the client
-router.get('/api-key', searchController.getApiKey);
+// SECURITY FIX: Removed the insecure /api-key endpoint
+// API key is now kept private on the backend and proxied through /search-suggestions
 
-// router.get('/', recipeController.getRandomRecipes); 
+// router.get('/', recipeController.getRandomRecipes; 
 
 // Route to fetch items from SearchBar
 // router.get('/recipes/:id/information', recipeController.getRecipeDetails);

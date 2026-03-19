@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   userName: { type: String, unique: true },
   email: { type: String, unique: true },
   password: String,
+  profileImage: { type: String, default: null }, // 🆕 Add profile image field
 
   // 🆕 Add this field to track liked recipes
   likedRecipes: [{

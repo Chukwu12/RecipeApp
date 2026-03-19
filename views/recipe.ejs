@@ -46,7 +46,7 @@
               <a class="nav-link active" aria-current="page" href="/recipe">Recipes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/profile">Profile</a>
+              <a class="nav-link" href="/profile">Dashboard</a>
             </li>
           </ul>
         </div>
@@ -102,9 +102,8 @@
           <span class="left-pan">
             <i class="fa fa-search" id="search-button"></i>
           </span>
+          <div id="suggestions" class="suggestions-box"></div>
         </div>
-        <div id="suggestions" class="suggestions-box"></div>
-        <!-- Suggestions box -->
       </div>
 
       <header id="second-nav">
@@ -174,8 +173,8 @@
                         </div>
 
                         <!-- View Recipe Button -->
-                        <form action="/recipeInfo/<%= recipe.id %>" method="GET">
-                          <button class="view-recipe-btn" data-recipe-id="<%= recipe.id %>">
+                        <form action="/recipeInfo/<%= recipe.spoonacularId || recipe.id %>" method="GET">
+                          <button class="view-recipe-btn" data-recipe-id="<%= recipe.spoonacularId || recipe.id %>">
                             View Recipe
                           </button>
                         </form>
@@ -255,8 +254,8 @@
                         </div>
 
                         <!-- View Recipe Button -->
-                        <form action="/recipeInfo/<%= dessert.id %>" method="GET">
-                          <button class="view-recipe-btn" data-recipe-id="<%= dessert.id %>">
+                        <form action="/dessert/recipeInfo/<%= dessert.spoonacularId || dessert.id %>" method="GET">
+                          <button class="view-recipe-btn" data-recipe-id="<%= dessert.spoonacularId || dessert.id %>">
                             View Recipe
                           </button>
                         </form>
@@ -338,8 +337,8 @@
                         </div>
 
                         <!-- View Recipe Button -->
-                        <form action="/recipeInfo/<%= tip.id %>" method="GET">
-                          <button class="view-recipe-btn" data-recipe-id="<%= tip.id %>">
+                        <form action="/health/recipeInfo/<%= tip.spoonacularId || tip.id %>" method="GET">
+                          <button class="view-recipe-btn" data-recipe-id="<%= tip.spoonacularId || tip.id %>">
                             View Recipe
                           </button>
                         </form>

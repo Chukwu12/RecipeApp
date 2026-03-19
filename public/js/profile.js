@@ -1,10 +1,12 @@
 // --------------------------------Profile Card ---------------------------------------------------------//
 const header = document.getElementById('header');
 
-window.addEventListener('wheel', (event) => {
+if (header) {
+  window.addEventListener('wheel', (event) => {
     let delta = (event.deltaY + 3) * -1;
     animate(delta > 0, delta);
-});
+  });
+}
 
 const animate = (check, delta) => {
   const MIN_HEIGHT = 80;
@@ -31,48 +33,127 @@ const transform = (element, blur, height, zoom) => {
 
 
 // =================================triva button====================//
-
-document.getElementById('next-trivia').addEventListener('click', async function() {
+const nextTriviaBtn = document.getElementById('next-trivia');
+if (nextTriviaBtn) {
+  nextTriviaBtn.addEventListener('click', async function() {
     try {
-        const response = await fetch('/trivia/random');
+      const response = await fetch('/trivia/random');
 
-        
-        // If the response is not OK (i.e., status code is not 2xx), throw an error
-        if (!response.ok) {
-            throw new Error(`Failed to fetch trivia: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        document.querySelector('.trivia-question').textContent = data.trivia;
+      // If the response is not OK (i.e., status code is not 2xx), throw an error
+      if (!response.ok) {
+        throw new Error(`Failed to fetch trivia: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const triviaEl = document.querySelector('.trivia-question');
+      if (triviaEl) triviaEl.textContent = data.trivia;
     } catch (error) {
-        console.error('Error fetching trivia:', error);
-        document.querySelector('.trivia-question').textContent = 'Oops! Something went wrong. Please try again.';
+      console.error('Error fetching trivia:', error);
+      const triviaEl = document.querySelector('.trivia-question');
+      if (triviaEl) triviaEl.textContent = 'Oops! Something went wrong. Please try again.';
     }
-});
+  });
+}
 
-//============================JS for previewing the image ====================//
-// Define the previewImage function here
-function previewImage(event) {
-    const file = event.target.files[0];
-  
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imagePreview = document.getElementById('profile-image-display');
-        imagePreview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+//============================JS for uploading and saving profile image ====================//
+// Function to handle profile image upload
+async function uploadProfileImage(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+  if (!allowedTypes.includes(file.type)) {
+    Swal.fire({
+      title: 'Invalid File Type',
+      text: 'Please select a JPEG, JPG, or PNG image.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+    return;
   }
-  
-  // add event listeners to the input element
-  document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById('profile-image-upload');
-    if (fileInput) {
-      fileInput.addEventListener('change', previewImage);
+
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    Swal.fire({
+      title: 'File Too Large',
+      text: 'Please select an image smaller than 5MB.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  // Show loading state
+  Swal.fire({
+    title: 'Uploading...',
+    text: 'Please wait while we upload your profile image.',
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
     }
   });
 
+  try {
+    // Create FormData and append the file
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    // Upload to server
+    const response = await fetch('/profile/updateProfileImage', {
+      method: 'POST',
+      body: formData
+    });
+
+    // Check if response is JSON or HTML (redirect)
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // Likely a redirect due to authentication failure
+      throw new Error('Authentication required. Please log in again.');
+    }
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Update the displayed image with the new URL
+      const imagePreview = document.getElementById('profile-image-display');
+      imagePreview.src = result.profileImage;
+
+      // Show success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your profile image has been updated.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    } else {
+      // Handle specific error cases
+      if (response.status === 401) {
+        throw new Error('Authentication required. Please log in again.');
+      } else if (result.message) {
+        throw new Error(result.message);
+      } else {
+        throw new Error('Upload failed');
+      }
+    }
+  } catch (error) {
+    console.error('Upload error:', error);
+    Swal.fire({
+      title: 'Upload Failed',
+      text: error.message || 'There was an error uploading your image. Please try again.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  }
+}
+
+// add event listeners to the input element
+const fileInput = document.getElementById('profile-image-upload');
+if (fileInput) {
+  fileInput.addEventListener('change', uploadProfileImage);
+}
 //=======================================================edit profile button ===================================================================//
 
 Swal.mixin({

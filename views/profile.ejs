@@ -44,7 +44,7 @@
               <a class="nav-link active" aria-current="page" href="/recipe">Recipes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/profile">Profile</a>
+              <a class="nav-link" href="/profile">Dashboard</a>
             </li>
           </ul>
         </div>
@@ -64,13 +64,15 @@
       <div class="shadow overflow">
         <div id="header"></div>
         <div id="profile">
+          <!-- Profile Image Upload Form -->
+          <form id="profile-image-form" enctype="multipart/form-data" style="display: none;">
+            <input type="file" name="profileImage" id="profile-image-upload" accept="image/*" />
+          </form>
+
           <div class="profile-image">
             <!-- Display the user's profile image or the default image -->
             <img src="<%= user.profileImage || '/image/user-profilepic.png' %>" alt="<%= user.userName %>'s profile"
               id="profile-image-display">
-            <!-- File input for uploading the image -->
-            <input type="file" id="profile-image-upload" accept="image/*" style="display:none;" autocomplete="on"
-              onchange="previewImage(event)" />
           </div>
 
           <div class="user-info">
@@ -92,17 +94,6 @@
 
           <!-- Label to trigger the file input -->
           <label for="profile-image-upload" class="profile-label mt-2"><span>Add Photo</span></label>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <!-- Food Trivia -->
-          <div class="fun-facts">
-            <h2>Welcome to the Food Trivia Facts</h2>
-            <p class="trivia-question">Click the button to get a trivia fact!</p>
-            <button id="next-trivia">Next Trivia</button>
-          </div>
         </div>
       </div>
     </section>
@@ -133,7 +124,7 @@
                       <p><i class="fa-regular fa-clock"></i> Ready in: <%= fav.recipe.readyInMinutes %> mins</p>
                       <div class="btn-group">
                         <button class="remove-fav-btn"
-                            data-id="<%= fav.spoonacularId || fav.recipe.spoonacularId || fav.recipe._id %>">
+                            data-id="<%= fav.spoonacularId %>">
                           <i class="fa-solid fa-trash"></i></button>
                         <button class="view-recipe-btn" data-recipe='<%- JSON.stringify(fav.recipe).replace(/'/g, "&#39;") %>'>
                           <i class="fa-solid fa-eye"></i> View
@@ -148,6 +139,9 @@
               <li class="glide__slide">
                 <div class="favorite-recipe-card empty">
                   <p>No favorite recipes yet.</p>
+                  <% if (typeof allFavorites !== 'undefined' && allFavorites.length > 0) { %>
+                    <p><small>Debug: You have <%= allFavorites.length %> favorites but <%= allFavorites.filter(f => !f.recipe).length %> don't have recipe data.</small></p>
+                  <% } %>
                 </div>
               </li>
             <% } %>
@@ -166,15 +160,6 @@
     </div>
   </div>
 </section>
-
-
-
-
-    <!-- Profile Triva section -->
-    <section id="user-card3">
-     
-    </section>
-
 
     <!-- Profile Create Recipe Section -->
     <section id="user-card4">
@@ -255,6 +240,20 @@
           
 
 
+        </div>
+      </div>
+    </section>
+
+     <!-- Profile Triva section -->
+    <section id="user-card3">
+     <div class="row">
+        <div class="col">
+          <!-- Food Trivia -->
+          <div class="fun-facts">
+            <h2>Welcome to the Food Trivia Facts</h2>
+            <p class="trivia-question">Click the button to get a trivia fact!</p>
+            <button id="next-trivia">Next Trivia</button>
+          </div>
         </div>
       </div>
     </section>

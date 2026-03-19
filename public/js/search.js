@@ -5,21 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestionsBox = document.getElementById('suggestions');
     const searchButton = document.getElementById('search-button');
     let timeoutId;
-    let API_KEY = '';
-
-
-
-    // Fetch API key from server
-async function loadApiKey() {
-  try {
-    console.log('🌐 Requesting API key...');
-    const response = await axios.get('/recipe/api-key');
-    API_KEY = response.data.apiKey;
-    console.log('✅ API Key loaded:', API_KEY);
-  } catch (error) {
-    console.error('🚫 Error loading API Key:', error);
-  }
-}
 
     // Debounce function to limit the number of API calls
     function debounce(func, delay) {
@@ -29,21 +14,20 @@ async function loadApiKey() {
         };
     }
 
-    // Function to fetch and display suggestions using axios
+    // Function to fetch and display suggestions using the SECURE proxy endpoint
     const fetchSuggestions = async () => {
         const query = inputBox.value.trim();
         if (query.length < 2) {
-            suggestionsBox.style.display = 'none'; // Hide suggestions if input is too short
+            suggestionsBox.style.display = 'none';
             return;
         }
 
         try {
-      const response = await axios.get('https://api.spoonacular.com/recipes/autocomplete', {
-        params: {
-          query: query,
-          number: 5,
-          apiKey: API_KEY
-        }
+            // SECURE: Call our backend proxy endpoint (API key never exposed to frontend)
+            const response = await axios.get('/search-suggestions', {
+                params: {
+                    query: query
+                }
             });
 
             const data = response.data;
@@ -57,7 +41,7 @@ async function loadApiKey() {
                     const suggestionItem = document.createElement('div');
                     suggestionItem.className = 'suggestion-item';
                     suggestionItem.textContent = item.title;
-                    suggestionItem.tabIndex = 0; // Make items focusable
+                    suggestionItem.tabIndex = 0;
                     suggestionItem.addEventListener('click', () => {
                           window.location.href = `/recipes/${item.id}/information`;
                     });
@@ -68,7 +52,7 @@ async function loadApiKey() {
                     });
                     suggestionsBox.appendChild(suggestionItem);
                 });
-                suggestionsBox.style.display = 'block'; // Show suggestions
+                suggestionsBox.style.display = 'block';
             } else {
                 suggestionsBox.innerHTML = '<div class="error-message">No suggestions found</div>';
                 suggestionsBox.style.display = 'block';
@@ -76,7 +60,7 @@ async function loadApiKey() {
         } catch (error) {
             console.error('Error fetching suggestions:', error);
             suggestionsBox.innerHTML = '<div class="error-message">Failed to load suggestions.</div>';
-            suggestionsBox.style.display = 'block'; // Show error message
+            suggestionsBox.style.display = 'block';
         }
     };
 
@@ -88,13 +72,8 @@ async function loadApiKey() {
 
     // Hide suggestions when the input loses focus
     inputBox.addEventListener('blur', () => {
-        setTimeout(() => { // Timeout allows clicks on suggestion items
+        setTimeout(() => {
             suggestionsBox.style.display = 'none';
         }, 200);
-    });
-
-   // Load the API key before using it
-    loadApiKey().then(() => {
-        console.log('🔐 API key fetch attempt complete.');
     });
 });

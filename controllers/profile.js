@@ -11,15 +11,28 @@ const Like = require('../models/Like');
 module.exports = {
   getProfile: async (req, res) => {
     try {
-      const userId = req.user.id;
+      console.log('getProfile called for user:', req.user ? req.user._id : 'no user');
+      
+      const userId = req.user._id; // Use _id instead of id
+      console.log('Fetching data for userId:', userId);
+      
       const userRecipes = await Recipe.find({ user: userId });
+      console.log('Found userRecipes:', userRecipes.length);
+      
       const favoriteDocs = await Favorite.find({ user: userId }).populate("recipe");
+      console.log('Found favoriteDocs:', favoriteDocs.length);
+      
+      // Log for debugging
+      console.log(`User ${userId} has ${favoriteDocs.length} favorites`);
+      console.log(`Valid favorites (with recipes): ${favoriteDocs.filter(fav => fav.recipe).length}`);
+      
       const validFavorites = favoriteDocs.filter(fav => fav.recipe);
 
       res.render("profile.ejs", {
         user: req.user,
         recipes: userRecipes,
         validFavorites,
+        allFavorites: favoriteDocs, // Include all favorites for debugging
       });
     } catch (err) {
       console.error("Error loading profile:", err);
@@ -29,7 +42,7 @@ module.exports = {
 
   toggleFavorite: async (req, res) => {
     try {
-      const userId = req.user.id;
+      const userId = req.user._id; // Use _id instead of id
       const spoonacularId = req.params.id;
 
       const existing = await Favorite.findOne({ user: userId, spoonacularId });
@@ -38,27 +51,39 @@ module.exports = {
         return res.status(200).json({ message: "Removed from favorites" });
       }
 
-      let recipe = await Recipe.findOne({ spoonacularId });
+      let recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       if (!recipe) {
-        const response = await axios.get(`https://api.spoonacular.com/recipes/${spoonacularId}/information`, {
-          params: { apiKey: process.env.RECIPES_API_KEY }
-        });
+        try {
+          const response = await axios.get(`https://api.spoonacular.com/recipes/${spoonacularId}/information`, {
+            params: { apiKey: process.env.RECIPES_API_KEY }
+          });
 
-        const r = response.data;
-        recipe = await Recipe.create({
-          spoonacularId: r.id,
-          name: r.title,
-          title: r.title,
-          image: r.image,
-          servings: r.servings,
-          readyInMinutes: r.readyInMinutes,
-          instructions: r.instructions || '',
-          ingredients: r.extendedIngredients?.map(i => ({
-            name: i.name,
-            amount: i.amount,
-            unit: i.unit
-          })) || [],
-        });
+          const r = response.data;
+          
+          // Validate required fields
+          if (!r.title || !r.image || !r.servings || !r.readyInMinutes) {
+            throw new Error('Incomplete recipe data from Spoonacular API');
+          }
+
+          recipe = await Recipe.create({
+            spoonacularId: spoonacularId,
+            title: r.title,
+            image: r.image,
+            servings: r.servings,
+            readyInMinutes: r.readyInMinutes,
+            instructions: r.instructions || '',
+            ingredients: r.extendedIngredients?.map(i => ({
+              name: i.name,
+              amount: i.amount,
+              unit: i.unit
+            })) || [],
+          });
+          
+          console.log('Created recipe:', recipe.title);
+        } catch (apiError) {
+          console.error('Error fetching/creating recipe:', apiError.message);
+          throw new Error('Failed to fetch recipe details');
+        }
       }
 
       const favorite = await Favorite.create({
@@ -173,7 +198,7 @@ module.exports = {
   deleteFavorite: async (req, res) => {
   try {
     const favorite = await Favorite.findOneAndDelete({
-      user: req.user.id,
+      user: req.user._id, // Use _id instead of id
       spoonacularId: req.params.id,
     });
 
@@ -212,4 +237,40 @@ module.exports = {
         res.status(500).json({ message: "Server error" });
       }
     },
+
+  updateProfileImage: async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      // Check if file was uploaded
+      if (!req.file) {
+        return res.status(400).json({ message: "No image file provided" });
+      }
+
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "profile-images"
+      });
+
+      // Update user profile with new image URL
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profileImage: result.secure_url },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({
+        message: "Profile image updated successfully",
+        profileImage: result.secure_url
+      });
+
+    } catch (error) {
+      console.error("Error updating profile image:", error);
+      res.status(500).json({ message: "Error updating profile image" });
+    }
+  },
 };

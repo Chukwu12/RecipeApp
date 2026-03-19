@@ -85,7 +85,7 @@ app.use('/health', healthRoutes);
 app.use('/recipeInfo', recipeRoutes);
 app.use('/cuisine', cuisineRoutes);
 app.use('/', mainRoutes);
-app.use('/', profileRoutes);
+app.use('/profile', profileRoutes); // 🛠️ Changed from '/' to '/profile'
 app.use('/', wineRoutes);
 app.use('/trivia', triviaRoutes);
 app.use('/', searchRoutes);

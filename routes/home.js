@@ -12,10 +12,6 @@ const mainController = require("../controllers/main");
 router.get('/', homeController.getIndex);
 
 
-// Profile Route
-router.get("/profile", ensureAuth , profileController.getProfile);
-   //console.log('User:', req.user); // Log the user object
-
 // Recipe Route - Combined Data
 router.get("/main",  ensureAuth, mainController.combinedData); // Ensure the user is authenticated
 

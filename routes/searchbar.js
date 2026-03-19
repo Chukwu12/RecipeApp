@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const searchController = require('../controllers/search');
 const API_KEY = process.env.RECIPES_API_KEY;
 const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/information';
+
+// SECURE: Proxy endpoint for search suggestions (API key stays on server)
+router.get('/search-suggestions', searchController.searchSuggestions);
 
 router.get('/recipes/:id/information', async (req, res) => {
   const recipeId = req.params.id;

@@ -9,6 +9,9 @@ const upload = require('../middleware/multer');
 // Get user profile
 router.get("/", ensureAuth, profileController.getProfile);
 
+// Update profile image
+router.post("/updateProfileImage", ensureAuth, upload.single("profileImage"), profileController.updateProfileImage);
+
 
 // Like Recipe
 router.put("/likeRecipe/:id", profileController.likeRecipe);

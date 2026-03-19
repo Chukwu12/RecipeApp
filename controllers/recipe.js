@@ -10,10 +10,6 @@ const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/informa
 // const API_KEY = process.env.API_KEY;
 
 
-console.log('API Key:', process.env.RECIPES_API_KEY);
-
-
-
 const getRandomRecipes = async () => {
     try {
         const requiredRecipes = 5;

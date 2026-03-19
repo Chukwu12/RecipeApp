@@ -9,9 +9,10 @@ cloudinary.config({
   
 });
 
-console.log("Cloudinary Config:");
-console.log("CLOUD_NAME:", process.env.CLOUD_NAME);
-console.log("API_KEY:", process.env.API_KEY);
-console.log("API_SECRET:", process.env.API_SECRET ? "Loaded ✅" : "Missing ❌");
+// It's best practice to avoid logging sensitive credentials in production.
+// Only log whether required variables are present (not their values).
+if (!process.env.CLOUD_NAME || !process.env.API_KEY || !process.env.API_SECRET) {
+  console.warn('Cloudinary configuration is missing required environment variables.');
+}
 
 module.exports = cloudinary;
