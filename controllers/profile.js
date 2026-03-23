@@ -119,15 +119,14 @@ module.exports = {
       // Guard clause if no file
       if (!req.file) {
         console.error("❌ No file uploaded");
-        req.flash('error', 'Please upload an image.');
-        return res.redirect('/profile');
+        return res.status(400).json({ success: false, message: 'Please upload an image.' });
       }
       // Upload image to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
       console.log("✅ Cloudinary upload success:", result.secure_url);
 
       // Create new recipe
-      await UserRecipe.create({
+      const newRecipe = await UserRecipe.create({
         name: req.body.name,
         image: result.secure_url,
         cloudinaryId: result.public_id,
@@ -135,15 +134,20 @@ module.exports = {
           ? req.body.ingredients
           : [req.body.ingredients], // array of strings
         directions: req.body.directions,
+        servings: req.body.servings ? parseInt(req.body.servings) : undefined,
+        readyInMinutes: req.body.readyInMinutes ? parseInt(req.body.readyInMinutes) : undefined,
+        cuisine: req.body.cuisine || undefined,
+        difficulty: req.body.difficulty || undefined,
         likes: 0,
         user: req.user.id,
-        spoonacularId: req.body.spoonacularId
+        spoonacularId: req.body.spoonacularId || undefined
       });
 
-      res.redirect('/profile?success=Recipe created successfully!');
+      console.log("✅ Recipe created:", newRecipe.name);
+      res.status(201).json({ success: true, message: 'Recipe created successfully!' });
     } catch (err) {
-      console.error('🔥 Error in createRecipe:', err); // 🛠 Add this line
-      res.redirect('/profile?error=There was an error creating the recipe.');
+      console.error('🔥 Error in createRecipe:', err);
+      res.status(500).json({ success: false, message: 'There was an error creating the recipe.' });
     }
   },
 

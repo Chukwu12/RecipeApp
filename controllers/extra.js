@@ -1,4 +1,4 @@
-<section id="hero-section" id="hero-section">
+{/* <section id="hero-section" id="hero-section">
             <!-- <div class="wine-info">
                 <h1>Featured Wine: <%= wine.name %></h1>
                 <h3>Category: <%= wine.category %> | Region: <%= wine.region %></h3>
@@ -23,4 +23,4 @@
                   <p>No product suggestions available.</p>
                 <% } %>
               </div> -->
-            </section>    
+            </section>     */}

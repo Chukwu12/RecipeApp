@@ -21,6 +21,22 @@ const UserRecipeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  servings: {
+    type: Number,
+    required: false,
+  },
+  readyInMinutes: {
+    type: Number,
+    required: false,
+  },
+  cuisine: {
+    type: String,
+    required: false,
+  },
+  difficulty: {
+    type: String,
+    required: false,
+  },
   spoonacularId: {
     type: String,
     required: false,

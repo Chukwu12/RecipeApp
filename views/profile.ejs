@@ -190,7 +190,7 @@
               </div>
 
               <!-- Recipe Form -->
-              <form action="/createRecipe" enctype="multipart/form-data" method="POST" id="recipeForm">
+              <form id="recipeForm">
                 <div class="mb-3">
                   <label for="name" class="form-label">Recipe Name</label>
                   <input type="text" class="form-control" id="name" name="name" placeholder="e.g., Recipe Name" required>
@@ -214,14 +214,51 @@
                   <label for="imageUpload" class="form-label">Recipe Image</label>
                   <input type="file" class="form-control" id="imageUpload" name="file" accept="image/*" required>
                 </div>
-    
+
                 <div class="mb-3">
-                  <h6>Spoonacular ID</h6>
-                  <label for="spoonacularId" class="form-label"> Enter 6 digit Spoonacular ID</label>
-                  <input type="text" class="form-control" id="spoonacularId" name="spoonacularId" required>
+                  <label for="servings" class="form-label">Servings</label>
+                  <input type="number" class="form-control" id="servings" name="servings" placeholder="e.g., 4" min="1">
+                </div>
+
+                <div class="mb-3">
+                  <label for="readyInMinutes" class="form-label">Ready in Minutes</label>
+                  <input type="number" class="form-control" id="readyInMinutes" name="readyInMinutes" placeholder="e.g., 30" min="1">
+                </div>
+
+                <div class="mb-3">
+                  <label for="cuisine" class="form-label">Cuisine Type</label>
+                  <select class="form-control" id="cuisine" name="cuisine">
+                    <option value="">Select Cuisine</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Mexican">Mexican</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Indian">Indian</option>
+                    <option value="French">French</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="Thai">Thai</option>
+                    <option value="Mediterranean">Mediterranean</option>
+                    <option value="American">American</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="difficulty" class="form-label">Difficulty Level</label>
+                  <select class="form-control" id="difficulty" name="difficulty">
+                    <option value="">Select Difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                  </select>
                 </div>
     
-                <button type="submit" class="btn btn-success">Submit</button>
+                <div class="mb-3">
+                  <h6>Spoonacular ID (Optional)</h6>
+                  <label for="spoonacularId" class="form-label">Enter 6 digit Spoonacular ID (leave blank for custom recipes)</label>
+                  <input type="text" class="form-control" id="spoonacularId" name="spoonacularId">
+                </div>
+    
+                <button type="submit" class="btn btn-success" id="submitBtn">Create Recipe</button>
               </form>
     
             </div>
@@ -280,6 +317,68 @@
       input.required = true;
       ingredientsList.appendChild(input);
     }
+
+    // Handle recipe form submission
+    document.getElementById('recipeForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Creating Recipe...';
+      submitBtn.disabled = true;
+
+      try {
+        const formData = new FormData(this);
+        
+        // Show loading message
+        Swal.fire({
+          title: 'Creating Recipe',
+          text: 'Please wait while we create your recipe.',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        const response = await fetch('/createRecipe', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: result.message,
+            confirmButtonText: 'OK'
+          }).then(() => {
+            // Reset form
+            this.reset();
+            // Reload page to show new recipe
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: result.message
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An unexpected error occurred. Please try again.'
+        });
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
   </script>
   
 

@@ -29,7 +29,7 @@ router.post("/recipe/favoriteRecipe/:id", ensureAuth, profileController.toggleFa
 router.get('/profile', ensureAuth, createController.foodFacts);
 
  //Enables user to create post w/ cloudinary for media uploads
- router.post("/createRecipe", upload.single("file"), profileController.createRecipe);
+ router.post("/createRecipe", ensureAuth, upload.single("file"), profileController.createRecipe);
 
 
 module.exports = router;
