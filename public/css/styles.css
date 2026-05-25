@@ -665,3 +665,347 @@ hr ~ * {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+/* Modern Profile Page */
+body.profile-page {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 195, 137, 0.24), transparent 26%),
+    radial-gradient(circle at 92% 16%, rgba(157, 215, 201, 0.2), transparent 24%),
+    linear-gradient(160deg, #fffdf8 0%, #f2efe8 100%);
+  color: #1f2328;
+}
+
+body.profile-page #main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  padding-top: 0.7rem;
+}
+
+body.profile-page #main-nav .navbar {
+  margin: 0 auto;
+  width: min(1220px, calc(100% - 1.4rem));
+  border-radius: 999px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+  padding: 0.88rem 1rem;
+}
+
+body.profile-page #main-nav .navbar-brand img {
+  height: 34px;
+}
+
+body.profile-page #main-nav .navbar-nav {
+  gap: 0.45rem;
+}
+
+body.profile-page #main-nav .nav-link {
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  color: #2f3439;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.profile-page #main-nav .nav-link:hover {
+  text-decoration: none;
+  background: rgba(79, 111, 99, 0.12);
+}
+
+body.profile-page #main-nav .nav-link.active,
+body.profile-page #main-nav .nav-link[aria-current="page"] {
+  background: #1f2328;
+  color: #fff;
+}
+
+body.profile-page .background-wrapper {
+  background: transparent;
+  min-height: auto;
+  padding: 2rem 1rem 3rem;
+  gap: 1.3rem;
+  grid-template-rows: none;
+}
+
+body.profile-page .background-wrapper::before {
+  display: none;
+}
+
+body.profile-page #user-card,
+body.profile-page #user-card2,
+body.profile-page #user-card3,
+body.profile-page #user-card4 {
+  width: min(1220px, calc(100% - 0.2rem));
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.11);
+  backdrop-filter: blur(8px);
+}
+
+body.profile-page #user-card {
+  background-image: none;
+  padding: 1.2rem;
+}
+
+body.profile-page .shadow.overflow {
+  max-width: 520px;
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: none;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
+}
+
+body.profile-page #header {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  height: 132px;
+  background:
+    linear-gradient(120deg, rgba(79, 111, 99, 0.88), rgba(52, 78, 65, 0.8)),
+    url(/image/modern-kitchen-interior-design.jpg) center/cover;
+}
+
+body.profile-page #profile {
+  max-width: none;
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  padding: 4.8rem 1.4rem 1.2rem;
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+body.profile-page #profile .profile-image {
+  top: -42px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.14);
+}
+
+body.profile-page #profile .profile-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+body.profile-page .user-info {
+  height: auto;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+body.profile-page .user-info i {
+  gap: 0.6rem;
+  align-items: center;
+  font-style: normal;
+  color: #24303a;
+  background: rgba(79, 111, 99, 0.08);
+  border: 1px solid rgba(79, 111, 99, 0.12);
+  border-radius: 12px;
+  padding: 0.58rem 0.75rem;
+}
+
+body.profile-page .user-info i p {
+  margin: 0;
+}
+
+body.profile-page .profile-label {
+  position: static;
+  width: 140px;
+  margin: 0.8rem auto 0;
+  border-radius: 999px;
+  background: #4f6f63;
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  cursor: pointer;
+}
+
+body.profile-page .profile-label:hover {
+  background: #3f5a50;
+}
+
+body.profile-page .badge {
+  margin-top: 0.3rem;
+  background: rgba(79, 111, 99, 0.14);
+  color: #2e4a40;
+  border: 1px solid rgba(79, 111, 99, 0.2);
+}
+
+body.profile-page #user-card2,
+body.profile-page #user-card3,
+body.profile-page #user-card4 {
+  padding: 1.2rem;
+}
+
+body.profile-page .col-xl h2,
+body.profile-page .section-title {
+  margin: 0.4rem 0 1rem;
+  color: #1f2328;
+  font-family: "Gupter", serif;
+  letter-spacing: 0.03em;
+}
+
+body.profile-page .favorite-recipe-card {
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.1);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  max-width: 320px;
+  height: 490px;
+}
+
+body.profile-page .favorite-recipe-card .card-header {
+  height: 210px;
+}
+
+body.profile-page .favorite-recipe-card .card-body {
+  padding: 1rem 1rem 1.2rem;
+  gap: 0.35rem;
+}
+
+body.profile-page .favorite-recipe-card .food-title {
+  font-family: "Gupter", serif;
+  font-size: 1.05rem;
+  text-transform: none;
+}
+
+body.profile-page .favorite-recipe-card .btn-group {
+  gap: 0.7rem;
+}
+
+body.profile-page .favorite-recipe-card .btn-group button {
+  border-radius: 999px;
+  padding: 0.52rem 0.92rem;
+  font-size: 0.82rem;
+  background: #4f6f63;
+}
+
+body.profile-page .favorite-recipe-card .btn-group button:hover {
+  background: #3f5a50;
+}
+
+body.profile-page .remove-fav-btn {
+  width: auto;
+  background: #9f3f3f;
+}
+
+body.profile-page .remove-fav-btn:hover {
+  background: #7f2f2f;
+}
+
+body.profile-page .glide__arrows button {
+  border-radius: 999px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #4f6f63;
+}
+
+body.profile-page .create-container {
+  border-radius: 20px;
+  box-shadow: none;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+body.profile-page .create-content {
+  row-gap: 1.1rem;
+  padding: 1rem 0.3rem 1.3rem;
+}
+
+body.profile-page .create-content h1 {
+  font-family: "Gupter", serif;
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  margin: 0;
+  color: #1f2328;
+}
+
+body.profile-page #recipeForm {
+  width: min(760px, 100%);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 0.8rem;
+}
+
+body.profile-page #recipeForm .mb-3 {
+  margin-bottom: 0.55rem !important;
+}
+
+body.profile-page #recipeForm .mb-3:nth-last-child(-n+2),
+body.profile-page #recipeForm button[type="submit"] {
+  grid-column: 1 / -1;
+}
+
+body.profile-page #recipeForm .form-control {
+  border-radius: 10px;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+body.profile-page #recipeForm .btn {
+  border-radius: 999px;
+}
+
+body.profile-page .fun-facts {
+  max-width: none;
+  border-radius: 18px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+body.profile-page .fun-facts h2 {
+  font-family: "Gupter", serif;
+  margin-bottom: 0.6rem;
+}
+
+body.profile-page .fun-facts button {
+  border-radius: 999px;
+  background: #4f6f63;
+}
+
+body.profile-page .fun-facts button:hover {
+  background: #3f5a50;
+}
+
+@media (max-width: 991px) {
+  body.profile-page #recipeForm {
+    grid-template-columns: 1fr;
+  }
+
+  body.profile-page #main-nav .navbar {
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 575px) {
+  body.profile-page #main-nav .navbar {
+    width: calc(100% - 0.9rem);
+    padding: 0.8rem 0.85rem;
+  }
+
+  body.profile-page #main-nav .navbar-collapse {
+    margin-top: 0.8rem;
+    border-radius: 16px;
+    padding: 0.65rem;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  body.profile-page #main-nav .nav-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  body.profile-page #user-card,
+  body.profile-page #user-card2,
+  body.profile-page #user-card3,
+  body.profile-page #user-card4 {
+    width: calc(100% - 0.6rem);
+    padding: 0.85rem;
+  }
+}

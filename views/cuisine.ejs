@@ -12,12 +12,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/styles.css"> 
 </head>
-<body>
+<body class="cuisine-page">
     <header id="main-nav">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -37,7 +40,7 @@
                             <a class="nav-link active" aria-current="page" href="/recipe">Recipes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/profile">Profile</a>
+                            <a class="nav-link" href="/profile">Dashboard</a>
                         </li>
                     </ul>
                 </div>
@@ -72,12 +75,17 @@
     </header>
   
 
+    <main class="cuisine-main">
     <section id="cuisine">
-        <h1><%= type %> Recipes</h1>
+        <div class="cuisine-page-head">
+            <p class="cuisine-kicker">Curated Collection</p>
+            <h1><%= type %> Recipes</h1>
+            <p>Fresh picks inspired by <%= type %> flavors. Tap any card to view full details.</p>
+        </div>
         <div class="cuisine-container">
-            <ul>
+            <ul class="cuisine-grid">
                 <% recipes.forEach(recipe => { %>
-                    <li class="recipe-item">
+                    <li class="recipe-item cuisine-card-item">
                         <div class="image-container">
                             <img src="<%= recipe.image %>" alt="<%= recipe.title %>">
                             <div class="cusine-overlay">
@@ -92,6 +100,7 @@
             </ul>
         </div>
     </section>
+    </main>
 
     <div id="recipeInfoContent"></div>
 

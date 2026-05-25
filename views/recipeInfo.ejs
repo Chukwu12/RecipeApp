@@ -18,11 +18,14 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="recipe-info-page">
     <header id="main-nav">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -43,7 +46,7 @@
                             <a class="nav-link active" aria-current="page" href="/recipe">Recipes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/profile">Profile</a>
+                            <a class="nav-link" href="/profile">Dashboard</a>
                         </li>
                     </ul>
                 </div>
@@ -79,44 +82,60 @@
 
 
 
+    <main class="recipe-info-main">
     <section id="recipeInfo">
         <div class="recipeInfo-container">
             <header class="recipe-header">
                 <div class="recipeInfo-details">
+                    <p class="recipe-kicker">Recipe Details</p>
                     <h1>
                         <%= recipe.title %>
                     </h1>
-                    <p><i class="fa-regular fa-user"></i><strong>Servings:</strong>
-                        <%= recipe.servings %>
-                    </p>
-                    <p><i class="fa-solid fa-clock"></i><strong>Ready in:</strong>
-                        <%= recipe.readyInMinutes %> minutes
-                    </p>
+
+                    <div class="recipe-meta-chips">
+                        <p><i class="fa-regular fa-user"></i><span>Servings:</span>
+                            <%= recipe.servings %>
+                        </p>
+                        <p><i class="fa-solid fa-clock"></i><span>Ready in:</span>
+                            <%= recipe.readyInMinutes %> minutes
+                        </p>
+                    </div>
                 </div>
                 <figure>
                     <img src="<%= recipe.image %>" alt="<%= recipe.title %>" loading="lazy">
                 </figure>
             </header>
             <div class="recipe-details">
-                <ul class="ingredients">
+                <section class="ingredients">
                     <h2>Ingredients</h2>
-                    <% recipe.ingredients.forEach(ingredient=> { %>
-                        <li>
-                            <img src="/image/cooking-list-icon.png" alt="<%= ingredient.name %>">
-                            <%= ingredient.amount %>
-                                <%= ingredient.unit %> of <%= ingredient.name %>
-                        </li>
-                        <% }); %>
-                </ul>
+                    <ul>
+                        <% if (Array.isArray(recipe.ingredients) && recipe.ingredients.length) { %>
+                            <% recipe.ingredients.forEach(ingredient=> { %>
+                                <li>
+                                    <img src="/image/cooking-list-icon.png" alt="<%= ingredient.name || 'ingredient' %>">
+                                    <%= ingredient.amount || '' %>
+                                    <%= ingredient.unit || '' %>
+                                    <%= ingredient.name || '' %>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>Ingredient list is currently unavailable.</li>
+                        <% } %>
+                    </ul>
+                </section>
 
-                <div class="directions">
+                <section class="directions">
                     <h2>Instructions</h2>
                     <ol>
-                        <% recipe.instructions.split("\n").forEach(function(step) { %>
-                            <li><%- step %></li>
+                        <% if (recipe.instructions) { %>
+                            <% recipe.instructions.split(/\n|\.\s+/).filter(Boolean).forEach(function(step) { %>
+                                <li><%- step.trim() %></li>
                             <% }); %>
+                        <% } else { %>
+                            <li>Instructions are currently unavailable.</li>
+                        <% } %>
                     </ol>
-                </div>
+                </section>
             </div>
             <!-- Back to Recipe Page -->
             <div id="recipeReturn-btn">
@@ -126,6 +145,7 @@
 
 
     </section>
+    </main>
 
 
 

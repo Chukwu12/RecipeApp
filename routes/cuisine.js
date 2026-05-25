@@ -5,7 +5,7 @@ const cuisineController = require('../controllers/cuisine');
 
 
 // Route to get recipes by cuisine type
-router.get('/:type', getCuisineRecipes);
 router.get('/details/:id', cuisineController.getRecipeDetails);
+router.get('/:type', getCuisineRecipes);
 
 module.exports = router;

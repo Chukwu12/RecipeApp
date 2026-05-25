@@ -9,6 +9,15 @@ const RECIPES_API_URL = 'https://api.spoonacular.com/recipes/random';
 const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/information';
 // const API_KEY = process.env.API_KEY;
 
+const toViewRecipe = (recipe) => ({
+    title: recipe.title || 'Recipe',
+    image: recipe.image || '/image/placeholder.png',
+    servings: Number(recipe.servings) || 0,
+    readyInMinutes: Number(recipe.readyInMinutes) || 0,
+    instructions: recipe.instructions || recipe.directions || 'Instructions are not available yet.',
+    ingredients: Array.isArray(recipe.ingredients) ? recipe.ingredients : [],
+});
+
 
 // Helper: Ensure a recipe has a populated ingredients array
 const ensureIngredients = async (recipe) => {
@@ -91,43 +100,67 @@ module.exports = { getRandomRecipes };
 const getRecipeDetails = async (req, res) => {
     try {
          console.log('Fetching recipe with ID:', req.params.id); 
-        // Check for API key
-        if (!RECIPES_API_KEY) {
-            return res.status(401).json({ message: 'API key is missing' });
-        }
         const recipeId = req.params.id;
 
         if (!recipeId) {
             return res.status(400).send('Recipe ID is required');
         }
 
-        // Fetch recipe details from the API
-        const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', recipeId), {
-            params: {
-                apiKey: RECIPES_API_KEY,
+        let recipeForView = null;
+
+        // Try Spoonacular first when API key exists.
+        if (RECIPES_API_KEY) {
+            try {
+                const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', recipeId), {
+                    params: {
+                        apiKey: RECIPES_API_KEY,
+                    }
+                });
+
+                const recipe = response.data || {};
+                recipeForView = {
+                    title: recipe.title,
+                    image: recipe.image,
+                    servings: recipe.servings,
+                    readyInMinutes: recipe.readyInMinutes,
+                    instructions: recipe.instructions,
+                    ingredients: Array.isArray(recipe.extendedIngredients) ? recipe.extendedIngredients : [],
+                };
+            } catch (apiError) {
+                console.warn('Spoonacular recipe details failed, trying DB fallback:', apiError.response?.status || apiError.message);
             }
-        });
-
-        const recipe = response.data;
-
-
-        // Validate that the recipe data contains the expected fields
-        if (!recipe.title || !recipe.image || !recipe.servings || !recipe.readyInMinutes || !recipe.instructions || !Array.isArray(recipe.extendedIngredients)) {
-            return res.status(500).send('Recipe data is incomplete');
         }
 
+        // Fallback to MongoDB recipe data.
+        if (!recipeForView) {
+            const recipeIdText = String(recipeId);
+            const bySpoonacularId = await Recipe.aggregate([
+                {
+                    $match: {
+                        $expr: {
+                            $eq: [{ $toString: '$spoonacularId' }, recipeIdText],
+                        },
+                    },
+                },
+                { $limit: 1 },
+            ]);
 
-        // Render the recipe details page
-        res.render('recipeInfo', {
-            recipe: {
-                title: recipe.title,
-                image: recipe.image,
-                servings: recipe.servings,
-                readyInMinutes: recipe.readyInMinutes,
-                instructions: recipe.instructions,
-                ingredients: recipe.extendedIngredients
+            let dbRecipe = bySpoonacularId[0] || null;
+
+            if (!dbRecipe && /^[a-fA-F0-9]{24}$/.test(String(recipeId))) {
+                dbRecipe = await Recipe.findById(recipeId).lean();
             }
-        });
+
+            if (dbRecipe) {
+                recipeForView = toViewRecipe(dbRecipe);
+            }
+        }
+
+        if (!recipeForView) {
+            return res.status(404).send('Recipe not found');
+        }
+
+        res.render('recipeInfo', { recipe: recipeForView });
     } catch (error) {
         console.error('Error fetching recipe details:', error.message);
         res.status(500).send('Error fetching recipe details');
