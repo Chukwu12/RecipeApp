@@ -101,7 +101,7 @@ hr ~ * {
   max-width: 400px;
   min-width: 300px;
   height: 150px;
-  background: url(/image/modern-kitchen-interior-design.jpg);
+  background: linear-gradient(135deg, #4f6f63, #39564c);
   background-size: cover;
   background-position: center center;
   transition: all 0.08s linear;
@@ -242,6 +242,7 @@ hr ~ * {
 
 #title span {
   background: -webkit-linear-gradient(white, #38495a);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

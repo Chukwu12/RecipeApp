@@ -617,8 +617,8 @@ float: left;
 // Variables
 $bg-color: #f3f3f3;
 $shadow-color: darken($bg-color, 25%);
-$button-color: #337AB7;
-$button-shadow-color: darken($button-color, 25%);
+$button-color: #4f6f63;
+$button-shadow-color: darken($button-color, 8%);
 $cursive-font: 'Pacifico', cursive;
 $font-size: 18px;
 
@@ -701,7 +701,7 @@ $font-size: 18px;
         width: 150px;
         height: 40px;
         background-color: $button-color;
-        border: none;
+        border: 1px solid $button-color;
         border-radius: 5px;
         color: #fff;
         font-size: 1rem;
@@ -712,6 +712,11 @@ $font-size: 18px;
 
         &:hover {
           background-color: $button-shadow-color;
+        }
+
+        &:active,
+        &:focus-visible {
+          background-color: darken($button-color, 12%);
         }
       }
     }

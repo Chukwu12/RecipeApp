@@ -96,14 +96,26 @@
     <% } %>
 
       <!-- HTML: Search Bar -->
-      <div class="search-bar">
-        <div class="form">
-          <input type="text" id="input-box" placeholder="Search Recipes" autocomplete="off" />
-          <span class="left-pan">
-            <i class="fa fa-search" id="search-button"></i>
-          </span>
-          <div id="suggestions" class="suggestions-box"></div>
-        </div>
+      <div class="search-bar search-shell">
+        <form class="form search-form" role="search" aria-label="Search recipes" onsubmit="return false;">
+          <label class="search-label" for="input-box">Search Recipes</label>
+          <div class="search-field-wrap">
+            <input
+              type="text"
+              id="input-box"
+              class="search-field"
+              placeholder="Find recipes, ingredients, or cuisines"
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="suggestions"
+              aria-expanded="false"
+            />
+            <button type="button" class="search-action" id="search-button" aria-label="Search">
+              Search
+            </button>
+          </div>
+          <div id="suggestions" class="suggestions-box" role="listbox"></div>
+        </form>
       </div>
 
       <header id="second-nav">

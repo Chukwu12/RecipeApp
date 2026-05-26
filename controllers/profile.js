@@ -156,6 +156,7 @@ module.exports = {
     try {
       const userId = req.user._id;
       const recipeParam = req.params.id;
+      const recipeParamText = String(recipeParam);
   
       // Try to find the recipe from either MongoDB or Spoonacular
       let recipe = null;
@@ -165,7 +166,56 @@ module.exports = {
       }
   
       if (!recipe) {
-        recipe = await Recipe.findOne({ spoonacularId: recipeParam });
+        // Match regardless of whether spoonacularId was stored as string or number
+        const recipeMatch = await Recipe.aggregate([
+          {
+            $match: {
+              $expr: {
+                $eq: [{ $toString: '$spoonacularId' }, recipeParamText],
+              },
+            },
+          },
+          { $limit: 1 },
+        ]);
+
+        if (recipeMatch.length > 0) {
+          recipe = await Recipe.findById(recipeMatch[0]._id);
+        }
+      }
+
+      // If recipe isn't in Mongo yet and ID looks like Spoonacular, fetch and save it first.
+      if (!recipe && /^\d+$/.test(recipeParamText)) {
+        try {
+          const response = await axios.get(
+            `https://api.spoonacular.com/recipes/${recipeParamText}/information`,
+            {
+              params: { apiKey: process.env.RECIPES_API_KEY },
+            }
+          );
+
+          const r = response.data;
+          recipe = await Recipe.create({
+            spoonacularId: recipeParamText,
+            title: r.title,
+            image: r.image,
+            servings: r.servings,
+            readyInMinutes: r.readyInMinutes,
+            instructions: r.instructions || '',
+            ingredients:
+              r.extendedIngredients?.map((i) => ({
+                name: i.name,
+                amount: i.amount,
+                unit: i.unit,
+              })) || [],
+          });
+        } catch (apiError) {
+          // If a concurrent request created this recipe, load it and continue.
+          if (apiError?.code === 11000) {
+            recipe = await Recipe.findOne({ spoonacularId: recipeParamText });
+          } else {
+            console.error('Error fetching recipe details for like:', apiError.message);
+          }
+        }
       }
   
       if (!recipe) {

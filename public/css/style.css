@@ -87,6 +87,133 @@ nav ul li a:hover {
 /* Home page */
 body.home-page {
   font-family: "Inter", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 188, 128, 0.22), transparent 26%),
+    radial-gradient(circle at top right, rgba(120, 214, 190, 0.18), transparent 24%),
+    linear-gradient(180deg, #fffdf9 0%, #f6f3ee 100%);
+  color: #1f1f1f;
+  overflow-x: hidden;
+}
+
+body.login-page {
+  background:
+    radial-gradient(circle at top left, rgba(255, 188, 128, 0.22), transparent 26%),
+    radial-gradient(circle at top right, rgba(120, 214, 190, 0.18), transparent 24%),
+    linear-gradient(180deg, #fffdf9 0%, #f6f3ee 100%);
+  color: #1f1f1f;
+  overflow-x: hidden;
+}
+
+body.login-page #main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  padding-top: 0.75rem;
+}
+
+body.login-page #main-nav .navbar {
+  width: min(1200px, calc(100% - 1.5rem));
+  margin: 0 auto;
+  border-radius: 999px;
+  box-shadow: 0 14px 36px rgba(17, 24, 39, 0.08);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  background: rgba(255, 255, 255, 0.72) !important;
+  padding: 0.9rem 1.1rem;
+}
+
+body.login-page #main-nav .container-fluid {
+  padding-inline: 0.75rem;
+}
+
+body.login-page #main-nav .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-right: 1.2rem;
+}
+
+body.login-page #main-nav .navbar-brand img {
+  height: 34px;
+  width: auto;
+}
+
+body.login-page #main-nav .navbar-nav {
+  gap: 0.5rem;
+}
+
+body.login-page #main-nav .nav-item {
+  display: flex;
+}
+
+body.login-page #main-nav .nav-link {
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #30343b;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+body.login-page #main-nav .nav-link:hover {
+  background: rgba(79, 111, 99, 0.1);
+  color: #1f1f1f;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+body.login-page #main-nav .nav-link.active,
+body.login-page #main-nav .nav-link[aria-current="page"] {
+  background: #1f1f1f;
+  color: #fff;
+  box-shadow: 0 10px 18px rgba(17, 24, 39, 0.16);
+}
+
+body.login-page #main-nav .nav-link.active:hover,
+body.login-page #main-nav .nav-link[aria-current="page"]:hover {
+  background: #4f6f63;
+  color: #fff;
+}
+
+body.login-page #main-nav .navbar-toggler {
+  border: 1px solid rgba(17, 24, 39, 0.1);
+  border-radius: 999px;
+  box-shadow: none;
+  padding: 0.55rem 0.75rem;
+}
+
+body.login-page #main-nav .navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(79, 111, 99, 0.2);
+}
+
+body.login-page #main-nav .navbar-collapse {
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  body.login-page #main-nav .navbar {
+    width: calc(100% - 0.9rem);
+    border-radius: 24px;
+    padding: 0.8rem 0.85rem;
+  }
+
+  body.login-page #main-nav .navbar-collapse {
+    margin-top: 0.85rem;
+    padding: 0.75rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  body.login-page #main-nav .navbar-nav {
+    gap: 0.35rem;
+  }
+
+  body.login-page #main-nav .nav-link {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 body.home-page .title,
@@ -1101,13 +1228,14 @@ button {
 
 .view-recipe-btn {
   cursor: pointer;
-  border: 1px solid;
+  border: 1px solid #4f6f63;
   text-transform: uppercase;
   padding: 5px 5px;
   transition: color 0.4s linear;
   position: relative;
   transition: 0.5s;
-  color: black;
+  color: #fff;
+  background-color: #4f6f63;
   text-decoration: none;
   z-index: 1;
   overflow: hidden;
@@ -1116,7 +1244,14 @@ button {
 }
 
 .glide-card>button:hover {
-  color: none;
+  color: #fff;
+  background-color: #425d53;
+}
+
+.view-recipe-btn:active,
+.view-recipe-btn:focus-visible {
+  color: #fff;
+  background-color: #39564c;
 }
 
 .glide-card button::before {
@@ -1126,7 +1261,7 @@ button {
   top: 0;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: #4f6f63;
   z-index: -1;
   transition: transform 0.5s ease;
   transform-origin: left;
@@ -1140,19 +1275,19 @@ transform: scaleX(0);
 } */
 
 .glide__bullet {
-  border: 1.5px solid black;
-  background-color: var(--bs-code-color);
+  border: 1.5px solid #4f6f63;
+  background-color: #f8ece3;
 }
 
 .glide__bullet:hover {
-  border: 1.5px solid black;
-  background-color: black;
+  border: 1.5px solid #4f6f63;
+  background-color: #4f6f63;
 }
 
 .glide__bullet:hover,
 .glide__bullet:focus {
-  border: none !important;
-  background-color: black !important;
+  border: 1.5px solid #4f6f63 !important;
+  background-color: #4f6f63 !important;
 }
 
 .glide__bullets {
@@ -1162,8 +1297,8 @@ transform: scaleX(0);
 }
 
 .glide__bullet--active {
-  background-color: black !important;
-  border: 1.5px solid black;
+  background-color: #4f6f63 !important;
+  border: 1.5px solid #4f6f63;
 }
 
 .glide-card-image {
@@ -1452,20 +1587,126 @@ body.recipe-page .search-bar {
   max-width: 760px;
 }
 
-body.recipe-page .search-bar input {
-  background: rgba(255, 255, 255, 0.96);
-  color: #1f1f1f;
-  border: 1px solid rgba(31, 41, 55, 0.1);
-  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.08);
-  border-radius: 18px;
-  height: 56px;
-  padding-left: 1.25rem;
-  font-size: 1rem;
+body.recipe-page .search-shell {
+  position: relative;
 }
 
-body.recipe-page .search-bar i.fa-magnifying-glass,
-body.recipe-page .left-pan i {
-  color: #5a4633;
+body.recipe-page .search-form {
+  position: relative;
+}
+
+body.recipe-page .search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: transparent;
+}
+
+body.recipe-page .search-field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid rgba(31, 41, 55, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 34px rgba(17, 24, 39, 0.1);
+  padding: 0.4rem 0.45rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.recipe-page .search-field-wrap:focus-within {
+  border-color: rgba(79, 111, 99, 0.5);
+  box-shadow: 0 20px 36px rgba(17, 24, 39, 0.14);
+  transform: translateY(-1px);
+}
+
+body.recipe-page .search-field {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #1f1f1f;
+  height: 48px;
+  font-size: 1rem;
+  padding: 0 0.4rem;
+}
+
+body.recipe-page .search-field::placeholder {
+  color: #8a9098;
+}
+
+body.recipe-page .search-field:focus {
+  outline: none;
+}
+
+body.recipe-page .search-action {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.68rem 1rem;
+  background: linear-gradient(135deg, #4f6f63, #355046);
+  color: #fff;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  min-width: 96px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+body.recipe-page .search-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(53, 80, 70, 0.3);
+  background: linear-gradient(135deg, #3f5a50, #2f443c);
+}
+
+body.recipe-page .search-action:focus-visible {
+  outline: 2px solid rgba(79, 111, 99, 0.45);
+  outline-offset: 2px;
+}
+
+body.recipe-page .suggestions-box {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
+  border: 1px solid rgba(31, 41, 55, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 16px 30px rgba(17, 24, 39, 0.12);
+  z-index: 120;
+  max-height: 280px;
+  overflow-y: auto;
+  display: none;
+}
+
+body.recipe-page .suggestions-box.show {
+  display: block;
+}
+
+body.recipe-page .suggestion-item {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+body.recipe-page .suggestion-item:hover,
+body.recipe-page .suggestion-item:focus {
+  background: rgba(79, 111, 99, 0.12);
+  color: #224036;
+  outline: none;
+}
+
+body.recipe-page .search-status,
+body.recipe-page .error-message {
+  padding: 0.8rem 1rem;
+  color: #4e5b67;
+  font-size: 0.92rem;
 }
 
 body.recipe-page #second-nav {
@@ -1710,6 +1951,40 @@ body.recipe-page .glide__bullet--active {
   body.recipe-page #main-nav .nav-link {
     width: 100%;
     text-align: center;
+  }
+
+  body.recipe-page .search-label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 0.35rem;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    border: 0;
+    background: transparent;
+    padding-left: 0.7rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #4e5b67;
+  }
+
+  body.recipe-page .search-field-wrap {
+    padding: 0.35rem;
+    gap: 0.4rem;
+  }
+
+  body.recipe-page .search-field {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+
+  body.recipe-page .search-action {
+    min-width: 82px;
+    padding: 0.62rem 0.82rem;
+    font-size: 0.74rem;
   }
 }
 
@@ -2266,7 +2541,6 @@ body.recipe-info-page #recipeReturn-btn a:hover {
 
 .hero-wine-section {
   padding: 3rem 1rem;
-  background-image: url(/image/wine-bg-hero.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
