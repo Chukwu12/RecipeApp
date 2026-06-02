@@ -118,6 +118,26 @@ web: node server.js
 - `npm start` - Run the production server (`node server.js`)
 - `npm run dev` - Run with nodemon
 - `npm run watch:sass` - Watch and compile SCSS
+- `npm test` - Run Jest tests
+- `npm run test:watch` - Run Jest in watch mode
+
+## ✅ Testing (Jest)
+
+Jest is configured for unit testing.
+
+Run all tests:
+
+```bash
+npm test
+```
+
+Run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
+Current test files are under the `__tests__/` folder.
 
 ## 🧭 Route Reference
 
