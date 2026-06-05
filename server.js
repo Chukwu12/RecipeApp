@@ -67,7 +67,6 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public')); // Serve static files
-app.use(logger('dev'))
 app.use(methodOverride("_method")); // Comment out if not needed
 
 // Passport middleware

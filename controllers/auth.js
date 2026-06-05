@@ -2,12 +2,18 @@ const passport = require("passport");
 const validator = require("validator");
 const User = require("../models/User");
 
+const isAjaxRequest = (req) => req.xhr || req.get("X-Requested-With") === "XMLHttpRequest";
+
 exports.getLogin = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
+
+  const authErrors = req.flash("errors") || [];
+
   res.render("login", {
     title: "Login",
+    authErrors,
   });
 };
 
@@ -93,6 +99,13 @@ exports.postSignup = (req, res, next) => {
 
   // If there are validation errors, re-render the signup page with errors
   if (validationErrors.length) {
+    if (isAjaxRequest(req)) {
+      return res.status(400).json({
+        success: false,
+        errors: validationErrors,
+      });
+    }
+
     req.flash("errors", validationErrors);
     return res.redirect("/signup");
   }
@@ -115,8 +128,19 @@ exports.postSignup = (req, res, next) => {
       }
 
       if (existingUser) {
-        req.flash("errors", {
+        const duplicateError = {
           msg: "Account with that email address or username already exists.",
+        };
+
+        if (isAjaxRequest(req)) {
+          return res.status(400).json({
+            success: false,
+            errors: [duplicateError],
+          });
+        }
+
+        req.flash("errors", {
+          msg: duplicateError.msg,
         });
         return res.redirect("/signup"); // Correct path for signup
       }
@@ -132,6 +156,14 @@ exports.postSignup = (req, res, next) => {
           if (err) {
             return next(err);
           }
+
+          if (isAjaxRequest(req)) {
+            return res.status(200).json({
+              success: true,
+              redirect: "/profile",
+            });
+          }
+
           res.redirect("/profile"); // Redirect to profile after successful signup
         });
       });

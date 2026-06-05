@@ -1,6 +1,9 @@
 // config/database.js
 const mongoose = require("mongoose");
 
+// Mongoose 5 compatibility setting to avoid ensureIndex deprecation warnings.
+mongoose.set("useCreateIndex", true);
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.DB_STRING, {

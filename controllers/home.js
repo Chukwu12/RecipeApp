@@ -2,6 +2,8 @@
 module.exports = {
     getIndex: (req,res)=>{
         console.log('Inside getIndex'); // Debugging line
-        res.render('login')
+        res.render('login', {
+            authErrors: []
+        })
     }
 }

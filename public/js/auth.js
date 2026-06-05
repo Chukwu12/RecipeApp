@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sign_up_btn2 = document.querySelector('#sign_up_btn2');
     const sign_in_btn2 = document.querySelector('#sign-in-btn2');
 
+    const signupForm = document.querySelector('form.sign-up-form');
+
     // Check if all required elements are present
     if (sign_up_btn && sign_in_btn && container) {
         // Add event listener for the "Sign up" button
@@ -35,6 +37,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else {
         console.error('Required elements are not found in the DOM');
+    }
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(signupForm);
+            const body = new URLSearchParams(formData);
+
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json'
+                    },
+                    body: body.toString()
+                });
+
+                const payload = await response.json();
+
+                if (!response.ok) {
+                    const errorMessage = (payload.errors || [])
+                        .map((error) => error.msg)
+                        .filter(Boolean)
+                        .join('\n') || 'Signup failed. Please try again.';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Signup Failed',
+                        text: errorMessage,
+                        confirmButtonText: 'Try Again'
+                    });
+                    return;
+                }
+
+                if (payload.redirect) {
+                    window.location.assign(payload.redirect);
+                    return;
+                }
+
+                window.location.assign('/profile');
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Signup Failed',
+                    text: 'Network error. Please try again.',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        });
     }
 });
 

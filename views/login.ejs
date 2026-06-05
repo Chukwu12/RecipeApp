@@ -75,6 +75,10 @@
                     <i class="fa-solid fa-lock"></i>
                     <input type="password" name="password" placeholder="Password" required>
                 </div>
+                <div class="input-field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                </div>
                 <input type="submit" value="Sign up" class="home-btn">
                 <p class="account-text">Already have an account? <a href="#" id="sign-in-btn2">Sign in</a></p>
             </form>
@@ -108,6 +112,22 @@
     
 
        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <% if (typeof authErrors !== 'undefined' && authErrors.length > 0) { %>
+        <script>
+            const authErrorMessages = <%- JSON.stringify(authErrors.map((error) => error.msg).filter(Boolean)) %>;
+            const authErrorMessage = authErrorMessages.join('\n');
+
+            if (authErrorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Authentication Failed',
+                    text: authErrorMessage,
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        </script>
+        <% } %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src='js/auth.js'></script>
 </body>
