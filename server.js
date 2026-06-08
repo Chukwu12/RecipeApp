@@ -51,9 +51,8 @@ app.use(express.json());
 app.use(logger("dev"));
 
 const isProduction = process.env.NODE_ENV === 'production';
-if (isProduction) {
-  app.set('trust proxy', 1);
-}
+// Always trust the proxy (Railway, Heroku, etc.) so req.secure reflects the external HTTPS connection
+app.set('trust proxy', 1);
 
 // Sessions
 app.use(
@@ -68,7 +67,7 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: isProduction ? 'none' : 'lax',
-      secure: true,
+      secure: isProduction, // Only require HTTPS in production; allows local HTTP dev
     },
   })
 );
