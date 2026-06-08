@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
 
 function likeRecipe(recipeId, button) {
   const actionUrl = `/recipe/likeRecipe/${recipeId}`;
@@ -17,7 +19,8 @@ function likeRecipe(recipeId, button) {
   fetch(actionUrl, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken,
     },
     body: JSON.stringify({})
   })
@@ -76,6 +79,9 @@ function likeRecipe(recipeId, button) {
   
       fetch(`/recipe/favoriteRecipe/${recipeId}`, {
           method: 'POST',
+          headers: {
+            'X-CSRF-Token': csrfToken,
+          },
       })
           .then(response => response.json())
           .then(data => {

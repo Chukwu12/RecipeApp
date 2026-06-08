@@ -26,9 +26,12 @@ const mapDbRecipe = (recipe) => ({
     image: recipe.image,
 });
 
+const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const getCuisineFallbackRecipes = async (type, count = 6) => {
-    const keywords = cuisineKeywordMap[type?.toLowerCase()] || [type || 'recipe'];
-    const keywordRegex = new RegExp(keywords.join('|'), 'i');
+    const normalizedType = String(type || '').toLowerCase();
+    const keywords = cuisineKeywordMap[normalizedType] || ['recipe'];
+    const keywordRegex = new RegExp(keywords.map(escapeRegExp).join('|'), 'i');
 
     let recipes = await Recipe.aggregate([
         {
@@ -73,7 +76,11 @@ const getCuisineRecipes = async (req, res) => {
         const recipes = response.data.results;
         res.render('cuisine', { recipes, type });
     } catch (error) {
-        console.error(`Error fetching ${type} recipes:`, error.response?.status || error.message);
+        console.error('Error fetching cuisine recipes:', {
+            cuisineType: type,
+            status: error.response?.status,
+            message: error.message,
+        });
         try {
             const recipes = await getCuisineFallbackRecipes(type, 6);
             res.render('cuisine', { recipes, type });

@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="<%= csrfToken %>" />
   <title>Recipe Page</title>
   <!-- Font-awesome -->
   <script src="https://kit.fontawesome.com/bb1892d46f.js" crossorigin="anonymous"></script>
@@ -473,13 +474,16 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
       <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
         function likeRecipe(recipeId) {
           const actionUrl = `/recipe/likeRecipe/${recipeId}`;
 
           fetch(actionUrl, {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': csrfToken,
             },
             body: JSON.stringify({})
           })
@@ -512,6 +516,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json", // Make sure the content-type is JSON
+              'X-CSRF-Token': csrfToken,
             },
             body: JSON.stringify({ recipeId: recipeId }), // Send recipeId in the body
           })

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <!-- Font-awesome -->
     <script src="https://kit.fontawesome.com/bb1892d46f.js" crossorigin="anonymous"></script>
     <title>Create Recipes</title>
@@ -60,6 +61,7 @@
     <div class="container sign-up-mode">
         <div class="signin-signup">
             <form action="/login" class="sign-in-form" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <h2 class="title">Sign in</h2> 
                   <div class="input-field">
                     <i class="fa-solid fa-user"></i>
@@ -76,6 +78,7 @@
 
       <!-- Signup Form -->
             <form action="/signup" class="sign-up-form" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <h2 class="title">Sign up</h2>
                 <div class="input-field">
                     <i class="fa-solid fa-user"></i>

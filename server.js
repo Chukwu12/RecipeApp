@@ -6,6 +6,7 @@ const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require("connect-mongo");
 const flash = require('express-flash');
+const csurf = require('csurf');
 const logger = require('morgan');
 const connectDB = require('./config/database');
 const methodOverride = require("method-override");
@@ -86,6 +87,13 @@ app.use(passport.session());
 // Use flash messages for errors, info, etc...
 app.use(flash());
 
+// CSRF protection for session-authenticated requests.
+app.use(csurf());
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 // Routes
 app.use('/', homeRoutes);
 app.use('/recipe', recipeRoutes);
@@ -104,6 +112,14 @@ app.use('/', searchRoutes);
 
 // Global error handling middleware (optional)
 app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    if (req.xhr || req.get('X-Requested-With') === 'XMLHttpRequest') {
+      return res.status(403).json({ message: 'Invalid CSRF token' });
+    }
+
+    return res.status(403).send('Invalid CSRF token');
+  }
+
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });

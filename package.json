@@ -23,6 +23,7 @@
     "body-parser": "^1.20.5",
     "cloudinary": "^2.10.0",
     "connect-mongo": "^5.1.0",
+    "csurf": "^1.11.0",
     "debug": "^4.3.7",
     "dotenv": "^8.2.0",
     "ee-first": "^1.1.1",

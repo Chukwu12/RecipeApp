@@ -1,5 +1,6 @@
 // --------------------------------Profile Card ---------------------------------------------------------//
 const header = document.getElementById('header');
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
 if (header) {
   window.addEventListener('wheel', (event) => {
@@ -104,6 +105,9 @@ async function uploadProfileImage(event) {
     // Upload to server
     const response = await fetch('/profile/updateProfileImage', {
       method: 'POST',
+      headers: {
+        'X-CSRF-Token': csrfToken,
+      },
       body: formData
     });
 
@@ -190,7 +194,10 @@ Swal.mixin({
         try {
           const response = await fetch(`/profile/recipe/favoriteRecipe/${id}`, {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': csrfToken,
+            },
           });
 
           if (response.ok) {

@@ -1,5 +1,7 @@
 // --------------------------Sign-in Form------------------------------------//
 document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
     // Cache the buttons and container
     const sign_in_btn = document.querySelector('#sign-in-btn');
     const sign_up_btn = document.querySelector('#sign-up-btn');
@@ -44,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const formData = new FormData(signupForm);
+            formData.append('_csrf', csrfToken);
             const body = new URLSearchParams(formData);
 
             try {
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                         'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-Token': csrfToken,
                         Accept: 'application/json'
                     },
                     body: body.toString()

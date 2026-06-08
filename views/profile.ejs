@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrfToken %>">
   <title>
     <%= user.userName %>'s Profile
   </title>
@@ -310,6 +311,8 @@
 
   <!-- Profile Card  End-->
   <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
     function addIngredient() {
       const ingredientsList = document.getElementById('ingredientsList');
       const input = document.createElement('input');
@@ -346,6 +349,9 @@
 
         const response = await fetch('/createRecipe', {
           method: 'POST',
+          headers: {
+            'X-CSRF-Token': csrfToken
+          },
           body: formData
         });
 
