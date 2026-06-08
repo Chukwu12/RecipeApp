@@ -4,9 +4,9 @@ const Favorite = require("../models/Favorite");
 const Recipe = require("../models/Recipe"); // Assuming you have a Recipe model
 // const User = require('../models/User');
 const formatRecipeData = require('../utils/formatRecipeData.js');
+const { fetchRecipeInformation, normalizeRecipeId } = require('../utils/spoonacular');
 const RECIPES_API_KEY = process.env.RECIPES_API_KEY;
 const RECIPES_API_URL = 'https://api.spoonacular.com/recipes/random';
-const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/information';
 // const API_KEY = process.env.API_KEY;
 
 const toViewRecipe = (recipe) => ({
@@ -26,11 +26,12 @@ const ensureIngredients = async (recipe) => {
     if (!id) return recipe;
 
     try {
-      const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', id), {
-        params: { apiKey: RECIPES_API_KEY }
-      });
+            const details = await fetchRecipeInformation(id, RECIPES_API_KEY);
+            if (!details) {
+                return recipe;
+            }
 
-      const apiIngredients = (response.data.extendedIngredients || []).map(ing => ({
+            const apiIngredients = (details.extendedIngredients || []).map(ing => ({
         name: ing.name,
         amount: ing.amount,
         unit: ing.unit || ""
@@ -111,21 +112,17 @@ const getRecipeDetails = async (req, res) => {
         // Try Spoonacular first when API key exists.
         if (RECIPES_API_KEY) {
             try {
-                const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', recipeId), {
-                    params: {
-                        apiKey: RECIPES_API_KEY,
-                    }
-                });
-
-                const recipe = response.data || {};
-                recipeForView = {
-                    title: recipe.title,
-                    image: recipe.image,
-                    servings: recipe.servings,
-                    readyInMinutes: recipe.readyInMinutes,
-                    instructions: recipe.instructions,
-                    ingredients: Array.isArray(recipe.extendedIngredients) ? recipe.extendedIngredients : [],
-                };
+                const details = await fetchRecipeInformation(recipeId, RECIPES_API_KEY);
+                if (details) {
+                    recipeForView = {
+                        title: details.title,
+                        image: details.image,
+                        servings: details.servings,
+                        readyInMinutes: details.readyInMinutes,
+                        instructions: details.instructions,
+                        ingredients: Array.isArray(details.extendedIngredients) ? details.extendedIngredients : [],
+                    };
+                }
             } catch (apiError) {
                 console.warn('Spoonacular recipe details failed, trying DB fallback:', apiError.response?.status || apiError.message);
             }
@@ -185,12 +182,9 @@ const favoriteRecipe = async (req, res) => {
 
         // 2. If not found, fetch from Spoonacular API and save locally
         if (!recipe) {
-            const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information`, {
-                params: { apiKey: RECIPES_API_KEY },
-            });
+            const apiRecipe = await fetchRecipeInformation(recipeId, RECIPES_API_KEY);
 
-            if (response && response.data) {
-                const apiRecipe = response.data;
+            if (apiRecipe) {
 
                 // Create and save new recipe
                 recipe = await Recipe.create({
@@ -328,14 +322,12 @@ const getRecipeBySpoonacularId = async (spoonacularId) => {
             console.log('Recipe not found in database. Fetching from API...');
 
             // Fetch the recipe from the API
-            const response = await axios.get(`https://api.spoonacular.com/recipes/${spoonacularId}/information`, {
-                params: {
-                    apiKey: RECIPES_API_KEY,
-                }
-            });
+            const normalizedId = normalizeRecipeId(spoonacularId);
+            const apiRecipe = normalizedId
+              ? await fetchRecipeInformation(normalizedId, RECIPES_API_KEY)
+              : null;
 
-            if (response && response.data) {
-                const apiRecipe = response.data;
+            if (apiRecipe) {
 
                 // Save the recipe to MongoDB
                 recipe = new Recipe({

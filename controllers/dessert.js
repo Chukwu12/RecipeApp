@@ -4,7 +4,7 @@ const { RANDOM_API_URL } = require('../config/api');
 const RECIPES_API_KEY = process.env.RECIPES_API_KEY;
 const formatRecipeData = require('../utils/formatRecipeData.js');
 const Recipe = require('../models/Recipe');
-const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/information';
+const { fetchRecipeInformation } = require('../utils/spoonacular');
 
 const toViewRecipe = (recipe) => ({
   title: recipe.title || 'Recipe',
@@ -114,21 +114,17 @@ const getRecipeDetails = async (req, res) => {
         // Try Spoonacular first when API key exists.
         if (RECIPES_API_KEY) {
           try {
-            const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', recipeId), {
-              params: {
-                apiKey: RECIPES_API_KEY,
-              }
-            });
-
-            const recipe = response.data || {};
-            recipeForView = {
-              title: recipe.title,
-              image: recipe.image,
-              servings: recipe.servings,
-              readyInMinutes: recipe.readyInMinutes,
-              instructions: recipe.instructions,
-              ingredients: Array.isArray(recipe.extendedIngredients) ? recipe.extendedIngredients : [],
-            };
+            const details = await fetchRecipeInformation(recipeId, RECIPES_API_KEY);
+            if (details) {
+              recipeForView = {
+                title: details.title,
+                image: details.image,
+                servings: details.servings,
+                readyInMinutes: details.readyInMinutes,
+                instructions: details.instructions,
+                ingredients: Array.isArray(details.extendedIngredients) ? details.extendedIngredients : [],
+              };
+            }
           } catch (apiError) {
             console.warn('Spoonacular dessert details failed, trying DB fallback:', apiError.response?.status || apiError.message);
           }

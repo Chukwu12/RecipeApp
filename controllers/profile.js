@@ -6,6 +6,7 @@ const Favorite = require("../models/Favorite");
 const UserRecipe = require('../models/UserRecipe');
 const User = require('../models/User');
 const Like = require('../models/Like');
+const { fetchRecipeInformation } = require('../utils/spoonacular');
 
 
 module.exports = {
@@ -54,11 +55,10 @@ module.exports = {
       let recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       if (!recipe) {
         try {
-          const response = await axios.get(`https://api.spoonacular.com/recipes/${spoonacularId}/information`, {
-            params: { apiKey: process.env.RECIPES_API_KEY }
-          });
-
-          const r = response.data;
+          const r = await fetchRecipeInformation(spoonacularId, process.env.RECIPES_API_KEY);
+          if (!r) {
+            throw new Error('Invalid Spoonacular recipe ID');
+          }
           
           // Validate required fields
           if (!r.title || !r.image || !r.servings || !r.readyInMinutes) {
@@ -186,14 +186,10 @@ module.exports = {
       // If recipe isn't in Mongo yet and ID looks like Spoonacular, fetch and save it first.
       if (!recipe && /^\d+$/.test(recipeParamText)) {
         try {
-          const response = await axios.get(
-            `https://api.spoonacular.com/recipes/${recipeParamText}/information`,
-            {
-              params: { apiKey: process.env.RECIPES_API_KEY },
-            }
-          );
-
-          const r = response.data;
+          const r = await fetchRecipeInformation(recipeParamText, process.env.RECIPES_API_KEY);
+          if (!r) {
+            return res.status(400).json({ message: 'Invalid recipe ID' });
+          }
           recipe = await Recipe.create({
             spoonacularId: recipeParamText,
             title: r.title,
