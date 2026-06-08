@@ -1,4 +1,4 @@
-const RECIPE_DETAILS_API_URL = 'https://api.spoonacular.com/recipes/{id}/information';
+const { fetchRecipeInformation } = require('../utils/spoonacular');
 const RECIPES_API_KEY = process.env.RECIPES_API_KEY;
 
 // Fetch detailed recipe information
@@ -16,13 +16,10 @@ const getRecipeDetails = async (req, res) => {
         }
 
         // Fetch recipe details from the API
-        const response = await axios.get(RECIPE_DETAILS_API_URL.replace('{id}', recipeId), {
-            params: {
-                apiKey: RECIPES_API_KEY,
-            }
-        });
-
-        const recipe = response.data;
+        const recipe = await fetchRecipeInformation(recipeId, RECIPES_API_KEY);
+        if (!recipe) {
+            return res.status(400).send('Invalid recipe ID');
+        }
 
         // Validate recipe data
         if (!recipe.title || !recipe.image || !recipe.servings || !recipe.readyInMinutes || !recipe.instructions || !Array.isArray(recipe.extendedIngredients)) {
