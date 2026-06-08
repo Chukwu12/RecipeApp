@@ -1,15 +1,12 @@
 // config/database.js
 const mongoose = require("mongoose");
 
-// Mongoose 5 compatibility setting to avoid ensureIndex deprecation warnings.
-mongoose.set("useCreateIndex", true);
+// useCreateIndex, useNewUrlParser, useUnifiedTopology were removed in Mongoose 6+
+// and no longer need to be set.
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.DB_STRING, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const conn = await mongoose.connect(process.env.DB_STRING);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
