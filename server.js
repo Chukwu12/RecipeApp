@@ -49,6 +49,11 @@ app.use(express.json());
 // Logging
 app.use(logger("dev"));
 
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
 // Sessions
 app.use(
   session({
@@ -58,7 +63,12 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.DB_STRING,  // Use environment variable for MongoDB URI
       // collectionName: 'sessions' // Optional: Define the collection name for storing sessions
-    })
+    }),
+    cookie: {
+      httpOnly: true,
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: true,
+    },
   })
 );
 

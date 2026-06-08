@@ -6,9 +6,10 @@ const healthController = require('../controllers/health');
 const { getRandomWineData } = require('../controllers/wine');
 const User = require('../models/User');
 const Like = require('../models/Like');
+const { readLimiter } = require('../middleware/rateLimit');
 const { ensureAuth } = require('../middleware/auth');
 
-router.get('/recipe', ensureAuth, async (req, res) => {
+router.get('/recipe', readLimiter, ensureAuth, async (req, res) => {
   try {
     // Fetch data from each controller
     const recipes = await recipeController.getRandomRecipes();

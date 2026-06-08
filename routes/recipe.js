@@ -3,6 +3,7 @@ const router = express.Router();
 const recipeController = require('../controllers/recipe');
 const searchController = require('../controllers/search');
 const profileController = require('../controllers/profile');
+const { readLimiter, mutationLimiter } = require('../middleware/rateLimit');
 
 
 // Load environment variable
@@ -18,19 +19,19 @@ require('dotenv').config();
 // router.get('/recipes/:id/information', recipeController.getRecipeDetails);
 
 // Route to fetch recipe details by ID
-router.get('/:id', recipeController.getRecipeDetails);
+router.get('/:id', readLimiter, recipeController.getRecipeDetails);
 
 // Route to like a recipe
-router.put('/likeRecipe/:id', profileController.likeRecipe);
+router.put('/likeRecipe/:id', mutationLimiter, profileController.likeRecipe);
 
 // Route to get favorite recipes
-router.post('/favoriteRecipe/:id', recipeController.favoriteRecipe);
+router.post('/favoriteRecipe/:id', mutationLimiter, recipeController.favoriteRecipe);
 
 // Route to get a recipe by Spoonacular ID
-router.get('/recipe/spoonacular/:id', recipeController.getRecipeBySpoonacularId);
+router.get('/recipe/spoonacular/:id', readLimiter, recipeController.getRecipeBySpoonacularId);
 
 //Enables user to delete post. In controller, uses POST model to delete post from MongoDB collection
-router.delete('/recipe/favoriteRecipe/:id', recipeController.deleteFavoriteRecipe);
+router.delete('/recipe/favoriteRecipe/:id', mutationLimiter, recipeController.deleteFavoriteRecipe);
 
 
 module.exports = router;
