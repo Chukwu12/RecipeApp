@@ -87,7 +87,10 @@ app.use(passport.session());
 app.use(flash());
 
 // CSRF protection for session-authenticated requests.
-app.use(csurf());
+const csrfProtection = csurf({
+  ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
+app.use(csrfProtection);
 app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
