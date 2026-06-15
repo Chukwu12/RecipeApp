@@ -1,0 +1,6 @@
+[build]
+  command = "echo 'No build step required for this server app'"
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "20"

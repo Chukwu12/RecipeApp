@@ -46,7 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const formData = new FormData(signupForm);
-            formData.append('_csrf', csrfToken);
+            // Keep a single _csrf field in the payload to avoid array values server-side.
+            if (!formData.get('_csrf')) {
+                formData.append('_csrf', csrfToken);
+            }
             const body = new URLSearchParams(formData);
 
             try {
