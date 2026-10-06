@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "jest": "^30.4.2",
-    "nodemon": "^1.14.10",
+    "nodemon": "^1.19.4",
     "sass": "^1.89.2"
   },
   "overrides": {
