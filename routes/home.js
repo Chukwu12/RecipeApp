@@ -23,7 +23,7 @@ router.get("/login", authController.getLogin);
 // Updated POST /login route with detailed error handling
 router.post('/login', authLimiter, authController.postLogin);
 // Logout Route
- router.get("/logout", authController.logout);
+ router.post("/logout", authController.logout);
 // Signup Routes
  router.get("/signup", authController.getSignup);
  router.post('/signup', authLimiter, authController.postSignup);
