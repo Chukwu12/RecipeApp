@@ -6,7 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="<%= csrfToken %>" />
-  <title>Recipe Page</title>
+  <title><%= (typeof recipe !== 'undefined' && recipe && recipe.title) ? recipe.title + ' | Recipe App' : 'Recipes | Recipe App' %></title>
+  <meta name="description" content="Browse recipe details, ingredients, instructions, and wine pairings in Recipe App." />
   <!-- Font-awesome -->
   <script src="https://kit.fontawesome.com/bb1892d46f.js" crossorigin="anonymous"></script>
   <!-- Glide.js CSS -->

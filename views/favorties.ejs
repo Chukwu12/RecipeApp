@@ -14,7 +14,7 @@
           <li class="col-6 justify-content-between mt-5">
             <a href="/recipe/<%= recipes[i].recipe._id%>">
               <h2><%= recipes[i].recipe.name%></h2>
-              <img class="img-fluid" src="<%= recipes[i].recipe.image%>">
+              <img class="img-fluid" src="<%= recipes[i].recipe.image%>" alt="<%= recipes[i].recipe.name%>">
               <p><%= recipes[i].recipe.ingredients%></p>
               <p><%= recipes[i].recipe.directions%></p>
             </a>

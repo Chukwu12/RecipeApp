@@ -27,6 +27,10 @@ Discover, save, and create recipes with a full-stack Node.js app powered by Spoo
 - 🧾 View full recipe details (ingredients + instructions)
 - 👤 User profile with custom recipe creation and image upload
 
+## 📸 Demo
+
+![Recipe App demo](docs/recipeapp-demo.gif)
+
 ## 🧱 Tech Stack
 
 - **Backend:** Node.js, Express
