@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "node --watch server.js",
     "watch:sass": "sass --watch public/scss/styles.scss:public/css/styles.css",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "jest": "^30.4.2",
-    "nodemon": "^3.1.14",
     "sass": "^1.89.2"
   },
   "overrides": {
