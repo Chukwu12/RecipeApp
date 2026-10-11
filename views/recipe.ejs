@@ -47,12 +47,18 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/recipe">Recipes</a>
             </li>
+            <% if (user) { %>
             <li class="nav-item">
               <a class="nav-link" href="/profile">Dashboard</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Sign out</a>
             </li>
+            <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/signup">Sign up</a>
+            </li>
+            <% } %>
           </ul>
         </div>
       </nav>

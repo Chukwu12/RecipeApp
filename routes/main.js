@@ -9,14 +9,14 @@ const Like = require('../models/Like');
 const { readLimiter } = require('../middleware/rateLimit');
 const { ensureAuth } = require('../middleware/auth');
 
-router.get('/recipe', readLimiter, ensureAuth, async (req, res) => {
+router.get('/recipe', readLimiter, async (req, res) => {
   try {
     // Fetch data from each controller
     const recipes = await recipeController.getRandomRecipes();
     const desserts = await dessertController.getDessertRecipes();
     const healthyRecipes = await healthController.getHealthRecipes();
     const wineData = await getRandomWineData();
-    const likedRecipes = await Like.find({ user: req.user._id }).select('recipe');
+    const likedRecipes = req.user ? await Like.find({ user: req.user._id }).select('recipe') : [];
     const likedRecipeIds = likedRecipes
     .map(like => like.recipe ? like.recipe.toString() : null)
     .filter(id => id !== null);

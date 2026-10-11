@@ -92,8 +92,8 @@ const combinedData = async (req, res) => {
       randomRecipes,
       dessertRecipes,
       healthRecipes,
-      user: req.user, 
-      likedRecipeIds,
+      user: req.user || null,
+      likedRecipeIds: [],
     });
   } catch (err) {
     console.error('Error rendering recipe page:', err.message);

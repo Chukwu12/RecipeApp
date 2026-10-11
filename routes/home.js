@@ -14,7 +14,7 @@ router.get('/', homeController.getIndex);
 
 
 // Recipe Route - Combined Data
-router.get('/main', readLimiter, ensureAuth, mainController.combinedData); // Ensure the user is authenticated
+router.get('/main', readLimiter, mainController.combinedData);
 
 
 // Login Routes
