@@ -120,7 +120,7 @@ web: node server.js
 ## 🛠️ Available Scripts
 
 - `npm start` - Run the production server (`node server.js`)
-- `npm run dev` - Run with nodemon
+- `npm run dev` - Run the server with Node's built-in file watcher
 - `npm run watch:sass` - Watch and compile SCSS
 - `npm test` - Run Jest tests
 - `npm run test:watch` - Run Jest in watch mode
