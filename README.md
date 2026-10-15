@@ -155,7 +155,7 @@ Below is a quick route map for the main HTTP endpoints.
 - `POST /login` - Login submit
 - `GET /signup` - Signup page
 - `POST /signup` - Signup submit
-- `GET /logout` - Logout user
+- `POST /logout` - Logout user
 - `GET /recipe` - Main recipe experience (auth required)
 - `GET /profile` - User profile (auth required)
 
